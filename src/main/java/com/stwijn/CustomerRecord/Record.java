@@ -17,11 +17,9 @@ public class Record {
 	@Column(name="id")
 	private int id;
 	
-	//@Column(name="transactionRef")
 	@Column(name="transaction_ref")
 	private int transactionRef;
 	
-	//@Column(name="accNumber")
 	@Column(name="acc_number")
 	private String accNumber;
 	
@@ -34,7 +32,6 @@ public class Record {
 	@Transient
 	private String description;
 	
-	//@Column(name="endBal")
 	@Column(name="end_bal")
 	private double endBal;
 	
@@ -50,7 +47,6 @@ public class Record {
 	}
 	
 	public Record() {}
-	
 	
 	public Record(int transactionRef, String accNumber, double endBal) {
 		this.transactionRef = transactionRef;
@@ -70,7 +66,6 @@ public class Record {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
 
 	public int getTransactionRef() {
 		return transactionRef;
