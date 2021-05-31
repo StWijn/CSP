@@ -35,16 +35,25 @@ public class Analyzer {
 	}
 
 	@Transactional
-	public List<Record> DBreturnList() {
+	public List<Record> getList() {
 		Query query = entityManager.createQuery("from Record");
 		List<Record> records = query.getResultList();
 
 		return records;
 	}
+	
+	@Transactional
+	public void deleteByTransactionRef(int transactionRef) {
+		
+		Query query = entityManager.createQuery("delete from Record where transaction_ref=:ref");
+		
+		query.setParameter("ref", transactionRef);
+		query.executeUpdate();
+	}
 
 	@Transactional
 	public Record findByTransactionRef(int transactionRef) {
-		for (Record record : DBreturnList()) {
+		for (Record record : getList()) {
 			if (record.getTransactionRef() == transactionRef) {
 				return record;
 			}
@@ -55,7 +64,7 @@ public class Analyzer {
 
 
 	public boolean checkUniqueReference(Record newRecord) {
-		for (Record acc : DBreturnList()) {
+		for (Record acc : getList()) {
 			if (acc.getTransactionRef() == newRecord.getTransactionRef()) {
 				return false;
 			}

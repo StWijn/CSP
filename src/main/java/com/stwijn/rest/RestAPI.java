@@ -6,17 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.stwijn.CustomerRecord.Record;
 import com.stwijn.logic.Analyzer;
 
 @RestController
+@RequestMapping("/api")
 public class RestAPI {
 
 	private Analyzer recordAnalyzer;
@@ -59,8 +62,8 @@ public class RestAPI {
 		}
 
 	}
-	
-	//update balance of existing record in db
+
+	// update balance of existing record in db
 	@PutMapping("/in/{transactionRef}/{mutation}")
 	public Record updateBalance(@PathVariable int transactionRef, @PathVariable double mutation) {
 		Record theRecord = recordAnalyzer.findByTransactionRef(transactionRef);
@@ -74,9 +77,22 @@ public class RestAPI {
 		return theRecord;
 	}
 
+	// delete record from db by transactionRef
+	@DeleteMapping("/in/{transactionRef}")
+	public String deleteRecord(@PathVariable int transactionRef) {
+		Record theRecord = recordAnalyzer.findByTransactionRef(transactionRef);
+
+		if (theRecord == null) {
+			throw new RuntimeException("No record found for transaction reference: " + transactionRef);
+		}
+
+		recordAnalyzer.deleteByTransactionRef(transactionRef);
+		return "Successfully deleted Record with transaction reference: " + transactionRef;
+	}
+
 	@GetMapping("/get")
 	public List<Record> getListSuccessfulEntries() {
-		return recordAnalyzer.DBreturnList();
+		return recordAnalyzer.getList();
 	}
 
 	@GetMapping("/get/{transactionRef}")
@@ -88,9 +104,5 @@ public class RestAPI {
 		}
 		return theRecord;
 	}
-	
 
-		
-	}
-
-
+}
